@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.js"></script> -->
+    <!-- <script src="p5.js"></script> -->
+    <script src="tim.js"></script>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+      body {
+        background: white;
+      }
+      
+      .stats, .all, .best {
+        font-family: "Courier";
+      }
+
+      .best {
+        font-size: 48px;
+      }
+
+      .stats {
+        font-size: 24px;
+      }  
+    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <script src="DNA.js"></script>
+    <script src="Population.js"></script>
+    <script src="sketch.js"></script>
+    <script src="fitness_check.js"></script>
+    <script>
+        var final_solution=[];
+      $( document ).ready(function() {
+      
+        const date_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        for(let i=0;i<month_job.length;i++){
+          let week_day = new Date(month_job[i].day_of_week).toLocaleDateString(undefined, date_options);
+          $(`#schedule_content`).append(`
+          
+          <div class="row mt-5">
+        <div class="col-10">
+          <div class="input-group"style="width: 100%;">
+            <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">${week_day}</th>
+                  <th scope="col">早班</th>
+                  <th scope="col">午班</th>
+                  <th scope="col">晚班</th>
+                  <th scope="col">尚未排班</th>
+                  <th scope="col">排休</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">醫師</th>
+                  <td id="full_time_doctor_1_${month_job[i].day_of_week}"></td>
+                  <td id="full_time_doctor_2_${month_job[i].day_of_week}"></td>
+                  <td id="full_time_doctor_3_${month_job[i].day_of_week}"></td>
+                  <td rowspan="5" id="not_yet_asign_work_${month_job[i].day_of_week}"></td>
+                  <td rowspan="5" id="full_time_doctor_day_off_${month_job[i].day_of_week}"></td>
+                </tr>
+                <tr>
+                  <th scope="row">藥劑師</th>
+                  <td id="full_time_pharmacist_1_${month_job[i].day_of_week}"></td>
+                  <td id="full_time_pharmacist_2_${month_job[i].day_of_week}"></td>
+                  <td id="full_time_pharmacist_3_${month_job[i].day_of_week}"></td>
+                 
+                </tr>
+                <tr>
+                  <th scope="row">護理師</th>
+                  <td id="full_time_nurse_1_${month_job[i].day_of_week}"></td>
+                  <td id="full_time_nurse_2_${month_job[i].day_of_week}"></td>
+                  <td id="full_time_nurse_3_${month_job[i].day_of_week}"></td>
+                  
+                </tr>
+                <tr>
+                  <th scope="row">行政人員</th>
+                  <td id="full_time_administration_1_${month_job[i].day_of_week}"></td>
+                  <td id="full_time_administration_2_${month_job[i].day_of_week}"></td>
+                  <td id="full_time_administration_3_${month_job[i].day_of_week}"></td>
+                 
+                </tr>
+                <tr>
+                  <th scope="row">工讀生</th>
+                  <td id="part_time_administration_1_${month_job[i].day_of_week}"></td>
+                  <td id="part_time_administration_2_${month_job[i].day_of_week}"></td>
+                  <td id="part_time_administration_3_${month_job[i].day_of_week}"></td>
+                 
+                </tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">Total generations:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="total_generations_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">總 適應值:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="current_fitness_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">人力配置(滿分0.5):</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="human_work_fitness_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">重複排班(滿分0.5):</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="shift_duplicate_fitness_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">預排班表(滿分0.5):</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="advance_shift_fitness_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">預排休假(滿分0.5):</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="vacation_check_fitness_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">班表滿意度(滿分0.2):</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="prefer_shift_fitness_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">Total population:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="total_population_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">Mutation rate:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="mutation_rate_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          </div>
+        </div>
+      </div>
+          `);
+          // <div class="input-group mt-0">
+          //   <div class="input-group-prepend">
+          //     <span class="input-group-text" id="inputGroup-sizing-default">輪班 適應值(滿分0.4):</span>
+          //   </div>
+          //   <input type="text" class="form-control" aria-label="Default" id="work_overtime_fitness_${month_job[i].day_of_week}" aria-describedby="inputGroup-sizing-default">
+          // </div>
+        }
+   
+      });
+      // this._start();
+      // var my_p5=new p5;
+      // my_p5._start(month_job[0]); //51639行
+
+     var p5_unit= new p5()._start(month_job[0]);
+
+
+      // my_p5._start(month_job[1]); //51639行
+      let loop_interval= setInterval(function(){ 
+        if(population.isFinished()){
+          if(month_job[parseInt(population.getTarget().order_sequence)+1] != undefined){
+            p5_unit = null;  
+            var p5_unit= new p5()._start(month_job[parseInt(population.getTarget().order_sequence)+1]);
+          }
+          // my_p5._start(month_job[parseInt(population.getTarget().order_sequence)+1]); //51639行
+        }  
+      }, 500);
+      if(month_job[parseInt(population.getTarget().order_sequence)+1] == undefined){
+        clearInterval(loop_interval);
+      }
+
+    </script>
+    <div class="container-fluid" id="schedule_content">
+          
+      <!-- <div class="row mt-5">
+        <div class="col-8">
+          <div class="input-group"style="width: 100%; height:270px;">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="week_num">1</span>
+            </div>
+            <textarea class="form-control"  id="best_solution_1" aria-label="With textarea"></textarea>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">total generations:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="total_generations_1" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">current 適應值:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="current_fitness_1" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">人力配置 適應值(差0 -> 最佳0.5):</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="human_work_fitness_1" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">排班不重複 適應值(差0 -> 最佳0.4):</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="shift_duplicate_fitness_1" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">超時輪班(不得輪三班) 適應值(差0 -> 最佳0.4):</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="work_overtime_fitness_1" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">total population:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="total_population_1" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">mutation rate:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="mutation_rate_1" aria-describedby="inputGroup-sizing-default">
+          </div>
+        </div>
+       
+ 
+      </div> -->
+    </div>
+       <!-- <div class="col-9">
+          <div class="input-group"style="width: 100%; display:none;">
+            <div class="input-group-prepend">
+              <span class="input-group-text">匹配組合</span>
+            </div>
+            <textarea class="form-control"  id="all_record"  aria-label="With textarea" style="height:100vh;"></textarea>
+          </div>
+        </div> -->
+     
+  </body>
+</html>

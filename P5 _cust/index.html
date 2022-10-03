@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.js"></script>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+      body {
+        background: white;
+      }
+      
+      .stats, .all, .best {
+        font-family: "Courier";
+      }
+
+      .best {
+        font-size: 48px;
+      }
+
+      .stats {
+        font-size: 24px;
+      }  
+    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <script src="DNA.js"></script>
+    <script src="Population.js"></script>
+    <script src="sketch.js"></script>
+    <script>
+        // setup();
+        // draw();
+    </script>
+    <div class="container-fluid">
+      <div class="row mt-5">
+        <div class="col-3">
+          <div class="input-group"style="width: 100%; height:200px;">
+            <div class="input-group-prepend">
+              <span class="input-group-text">最佳解</span>
+            </div>
+            <textarea class="form-control"  id="best_solution" aria-label="With textarea"></textarea>
+          </div>
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">total generations:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="total_generations" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">total population:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="total_population" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">mutation rate:</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" id="mutation_rate" aria-describedby="inputGroup-sizing-default">
+          </div>
+        </div>
+       
+        <div class="col-9">
+          <div class="input-group"style="width: 100%;">
+            <div class="input-group-prepend">
+              <span class="input-group-text">匹配組合</span>
+            </div>
+            <textarea class="form-control"  id="all_record"  aria-label="With textarea" style="height:100vh;"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
